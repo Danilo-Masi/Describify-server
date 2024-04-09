@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 
 const chatRoutes = require("./routes/chatRoutes");
+const waitlistRoutes = require('./routes/waitlistRoutes');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/", chatRoutes);
+app.use("/api", waitlistRoutes);
 
 const port = process.env.PORT || 3000;
 
