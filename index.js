@@ -6,6 +6,7 @@ const morgan = require("morgan");
 
 const chatRoutes = require("./routes/chatRoutes");
 const waitlistRoutes = require('./routes/waitlistRoutes');
+const resendRoutes = require('./routes/resendRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use("/", chatRoutes);
 app.use("/api", waitlistRoutes);
+app.use("/send-email", resendRoutes);
 
 const port = process.env.PORT || 3000;
 
