@@ -1,7 +1,8 @@
-const express = require("express");
-const dotenv = require("dotenv").config();
-const { body, validationResult } = require("express-validator");
-const { Resend } = require('resend');
+import express from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+import { body, validationResult } from 'express-validator';
+import { Resend } from 'resend';
 
 const router = express.Router();
 
@@ -10,10 +11,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 router.post("/send-email",
     body('email').trim(),
     async (req, res) => {
+        /* La validazione è commentata, ma qui è come riattivarla se necessario
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+        */
         const { email } = req.body;
         try {
             const { data, error } = await resend.emails.send({
@@ -33,4 +36,4 @@ router.post("/send-email",
     }
 );
 
-module.exports = router
+export default router;

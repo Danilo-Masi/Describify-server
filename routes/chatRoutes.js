@@ -1,7 +1,8 @@
-const express = require("express");
-const dotenv = require("dotenv").config();
-const { OpenAI } = require("openai");
-const { body, validationResult } = require("express-validator");
+import express from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+import { OpenAI } from 'openai';
+import { body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post("/chat",
                 model: "gpt-3.5-turbo",
                 messages: [{
                     role: "assistant",
-                    content: `Genera una descrizione accattivante e informativa per un prodotto di seconda mano destinato alla vendita online. Il prodotto ha queste carratteristiche: ${prompt}. 
+                    content: `Genera una descrizione accattivante e informativa per un prodotto di seconda mano destinato alla vendita online. Il prodotto ha queste caratteristiche: ${prompt}. 
                     Includi nel testo punti chiave che potrebbero interessare un potenziale acquirente, come lo stato di conservazione, l'unicità del design, la versatilità d'uso 
                     e qualsiasi altro dettaglio che possa valorizzare il prodotto. Assicurati che la descrizione sia ottimizzata per siti di vendita come Vinted, Subito, eBay, 
                     evidenziando perché sarebbe una buona aggiunta al guardaroba o alla collezione dell'acquirente.`
@@ -32,7 +33,7 @@ router.post("/chat",
                 temperature: 0.5,
                 top_p: 1,
             });
-            res.json({ message: "Success", descrizione: response.choices[0].message.content });
+            res.json({ message: "Success", description: response.choices[0].message.content });
         } catch (error) {
             console.error("OpenAI Error:", error);
             res.status(500).json({ message: "Internal Server Error", error: error.message });
@@ -40,6 +41,4 @@ router.post("/chat",
     }
 );
 
-module.exports = router
-
-
+export default router;

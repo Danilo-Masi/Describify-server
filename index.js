@@ -1,31 +1,35 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv").config();
-const helmet = require("helmet");
-const morgan = require("morgan");
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
+import helmet from 'helmet';
+import morgan from 'morgan';
+//Routes
+import chatRoutes from './routes/chatRoutes.js';
+import waitlistRoutes from './routes/waitlistRoutes.js';
 
-const chatRoutes = require("./routes/chatRoutes");
-const waitlistRoutes = require('./routes/waitlistRoutes');
-const resendRoutes = require('./routes/resendRoutes');
+//Routes bloccata
+//import resendRoutest from './routes/resendRoutes.js';
 
 const app = express();
 
 app.use(cors());
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 app.use(express.json());
 
-app.use("/", chatRoutes);
-app.use("/api", waitlistRoutes);
-app.use("/send-email", resendRoutes);
+app.use('/', chatRoutes);
+app.use('/api', waitlistRoutes);
+//Routes bloccata
+//app.use('/', resendRoutest);
 
 const port = process.env.PORT || 3000;
 
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

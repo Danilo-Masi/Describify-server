@@ -1,8 +1,8 @@
-const fetch = require('node-fetch');
-const dotenv = require("dotenv").config();
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+dotenv.config();
 
-exports.signupToWaitlist = async (req, res) => {
-
+export const signupToWaitlist = async (req, res) => {
     const { email } = req.body;
     const waitlistId = process.env.WAITLIST_ID;
     const referralLink = process.env.WAITLIST_URL;
@@ -23,7 +23,9 @@ exports.signupToWaitlist = async (req, res) => {
         });
 
         if (!response.ok) {
-            throw new Error(data.message || "An error occurred while signing up to the waitlist.");
+            // Assicurati di ottenere il corpo della risposta solo dopo aver verificato che la richiesta sia riuscita
+            const errorData = await response.json();
+            throw new Error(errorData.message || "An error occurred while signing up to the waitlist.");
         }
 
         const data = await response.json();

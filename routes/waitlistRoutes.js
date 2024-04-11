@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { signupToWaitlist } from '../controllers/waitlistController.js';
+
 const router = express.Router();
-const waitlistController = require('../controllers/waitlistController');
 
-router.post('/signup-to-waitlist', waitlistController.signupToWaitlist);
+router.post('/signup-to-waitlist', signupToWaitlist);
 
-module.exports = router;
+export default router;
