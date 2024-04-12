@@ -23,7 +23,6 @@ export const signupToWaitlist = async (req, res) => {
         });
 
         if (!response.ok) {
-            // Assicurati di ottenere il corpo della risposta solo dopo aver verificato che la richiesta sia riuscita
             const errorData = await response.json();
             throw new Error(errorData.message || "An error occurred while signing up to the waitlist.");
         }

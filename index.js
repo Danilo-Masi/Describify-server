@@ -7,9 +7,7 @@ import morgan from 'morgan';
 //Routes
 import chatRoutes from './routes/chatRoutes.js';
 import waitlistRoutes from './routes/waitlistRoutes.js';
-
-//Routes bloccata
-//import resendRoutest from './routes/resendRoutes.js';
+import resendRoutest from './routes/resendRoutes.js';
 
 const app = express();
 
@@ -19,9 +17,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/', chatRoutes);
-app.use('/api', waitlistRoutes);
-//Routes bloccata
-//app.use('/', resendRoutest);
+app.use('/', waitlistRoutes);
+app.use('/', resendRoutest);
 
 const port = process.env.PORT || 3000;
 

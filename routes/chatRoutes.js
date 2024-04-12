@@ -17,7 +17,6 @@ router.post("/chat",
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
         const { prompt } = req.body;
         try {
             const response = await openai.chat.completions.create({
