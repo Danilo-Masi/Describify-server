@@ -23,10 +23,7 @@ router.post("/chat",
                 model: "gpt-3.5-turbo",
                 messages: [{
                     role: "assistant",
-                    content: `Genera una descrizione accattivante e informativa per un prodotto di seconda mano destinato alla vendita online. Il prodotto ha queste caratteristiche: ${prompt}. 
-                    Includi nel testo punti chiave che potrebbero interessare un potenziale acquirente, come lo stato di conservazione, l'unicità del design, la versatilità d'uso 
-                    e qualsiasi altro dettaglio che possa valorizzare il prodotto. Assicurati che la descrizione sia ottimizzata per siti di vendita come Vinted, Subito, eBay, 
-                    evidenziando perché sarebbe una buona aggiunta al guardaroba o alla collezione dell'acquirente.`
+                    content: `Descrivi brevemente e convincentemente un articolo di seconda mano per la vendita online con queste caratteristiche: ${prompt}. Metti in luce i vantaggi e lo stato dell'oggetto per attirare acquirenti su piattaforme come Vinted, Subito, eBay. Limite di parole: massimo 50.`
                 }],
                 max_tokens: 200,
                 temperature: 0.5,
