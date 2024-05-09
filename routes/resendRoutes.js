@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { body, validationResult } from 'express-validator';
 import { Resend } from 'resend';
+import fs from 'fs/promises';
+import sanitizeHtml from 'sanitize-html';
 
 const router = express.Router();
 
@@ -17,11 +19,19 @@ router.post("/send-email",
             return res.status(400).json({ errors: errors.array() });
         }
         try {
+            //Legge il contenuto del file html di template
+            const htmlContent = await fs.readFile('./file/emailTemplate.html', 'utf-8');
+            //Pulisce il contenuto Html
+            const cleanHtml = sanitizeHtml(htmlContent, {
+                allowedTags: sanitizeHtml.defaults.allowedTags,
+                allowedAttributes: sanitizeHtml.defaults.allowedAttributes
+            });
+            //Invio dell'email
             const { data, error } = await resend.emails.send({
-                from: "Acme <onboarding@resend.dev>",
+                from: "Describify <info@describify.it>",
                 to: email,
-                subject: "hello world",
-                html: "<strong>it works!</strong>",
+                subject: "Benvenuto in Describify",
+                html: cleanHtml,
             });
             if (error) {
                 return res.status(400).json({ error });

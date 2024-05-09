@@ -24,7 +24,8 @@ const port = process.env.PORT || 3000;
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(400).send('Error server 400');
+  res.status(500).send('Error server 500');
 });
 
 app.listen(port, () => {
