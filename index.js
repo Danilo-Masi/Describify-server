@@ -5,7 +5,7 @@ dotenv.config();
 import helmet from 'helmet';
 import morgan from 'morgan';
 //Routes
-import chatRoutes from './routes/chatRoutes.js';
+//import chatRoutes from './routes/chatRoutes.js';
 import waitlistRoutes from './routes/waitlistRoutes.js';
 import resendRoutest from './routes/resendRoutes.js';
 
@@ -16,7 +16,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use('/', chatRoutes);
+//app.use('/', chatRoutes);
 app.use('/', waitlistRoutes);
 app.use('/', resendRoutest);
 
