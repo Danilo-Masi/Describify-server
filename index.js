@@ -4,10 +4,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 import helmet from 'helmet';
 import morgan from 'morgan';
-//Routes
-//import chatRoutes from './routes/chatRoutes.js';
+
+// Routes
+// import chatRoutes from './routes/chatRoutes.js';
 import waitlistRoutes from './routes/waitlistRoutes.js';
-import resendRoutest from './routes/resendRoutes.js';
+import resendRoutes from './routes/resendRoutes.js'; // Corretto typo
 
 const app = express();
 
@@ -16,16 +17,25 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 
-//app.use('/', chatRoutes);
+// app.use('/', chatRoutes);
 app.use('/', waitlistRoutes);
-app.use('/', resendRoutest);
+app.use('/', resendRoutes);
 
 const port = process.env.PORT || 3000;
 
+// Gestione degli errori
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(400).send('Error server 400');
-  res.status(500).send('Error server 500');
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message,
+      status: err.status || 500,
+    },
+  });
 });
 
 app.listen(port, () => {
