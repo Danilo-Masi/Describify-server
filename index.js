@@ -1,27 +1,51 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-dotenv.config();
 import helmet from 'helmet';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+import compression from 'compression';
 
-// Routes
-// import chatRoutes from './routes/chatRoutes.js';
+//Carica le variabili d'ambiente
+dotenv.config();
+
+// Import routes
 import waitlistRoutes from './routes/waitlistRoutes.js';
-import resendRoutes from './routes/resendRoutes.js'; // Corretto typo
+import resendRoutes from './routes/resendRoutes.js';
 
 const app = express();
 
-app.use(cors());
-app.use(helmet());
-app.use(morgan('dev'));
+// Middlewares di sicurezza e prestazioni
+app.use(cors()); //Permette le richieste da origini diverse
+app.use(helmet()); //Aggiunge vari header di sicurezza HTTP
+app.use(compression()); //Comprime le risposte HTTP per migliorare le prestazioni
+
+// Rate limit
+// Limita ogni IP a 100 richieste per finestra di 15 minuti
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+app.use(limiter);
+
+// Logging
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined'));
+} else {
+  app.use(morgan('dev'));
+}
+
+// Middleware per il parsing dei JSON
 app.use(express.json());
 
-// app.use('/', chatRoutes);
+// Routes
 app.use('/', waitlistRoutes);
 app.use('/', resendRoutes);
 
-const port = process.env.PORT || 3000;
+// Endpoint di salute
+app.get('/healt', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
 
 // Gestione degli errori
 app.use((err, req, res, next) => {
@@ -38,6 +62,10 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Numero di porta
+const port = process.env.PORT || 3000;
+
+// Avvio del server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
