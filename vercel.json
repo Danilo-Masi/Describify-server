@@ -21,11 +21,11 @@
       },
       {
         "src": "/emailTemplate_it.html",
-        "dest": "/file/emailTemplate_it.html"
+        "dest": "./file/emailTemplate_it.html"
       },
       {
         "src": "/emailTemplate_en.html",
-        "dest": "/file/emailTemplate_en.html"
+        "dest": "./file/emailTemplate_en.html"
       },
       {
         "src": "/(.*)",
