@@ -8,15 +8,15 @@
     ],
     "routes": [
         {
-            "src": "/api/waitlist.*",
+            "src": "/api/waitlist",
             "dest": "/routes/waitlistRoutes.js"
         },
         {
-            "src": "/api/resend.*",
+            "src": "/api/resend",
             "dest": "/routes/resendRoutes.js"
         },
         {
-            "src": "/healt",
+            "src": "/health",
             "dest": "/index.js"
         },
         {
