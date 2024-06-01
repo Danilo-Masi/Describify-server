@@ -20,7 +20,7 @@ export const sendEmail = async (req, res) => {
         }
 
         // Determina il template da usare in base alla lingua
-        const templateFile = language === 'it' ? 'file/emailTemplate_it.html' : 'file/emailTemplate_en.html';
+        const templateFile = language === 'it' ? '/emailTemplate_it.html' : '/emailTemplate_en.html';
 
         // Legge il contenuto del file Html
         const htmlContent = await fs.readFile(templateFile, 'utf-8');
