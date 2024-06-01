@@ -1,3 +1,4 @@
+// Import express, cors, dotenv, helmet, morgan, rateLimit, compression
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -60,6 +61,11 @@ app.use((err, req, res, next) => {
       status: err.status || 500,
     },
   });
+});
+
+// Gestione della rotta radice
+app.get('/', (req, res) => {
+  res.status(200).send('Welcome to Describify server');
 });
 
 // Numero di porta
