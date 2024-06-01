@@ -7,7 +7,6 @@ import sanitizeHtml from 'sanitize-html';
 dotenv.config();
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const server_url = 'https://describify-server.vercel.app';
 
 export const sendEmail = async (req, res) => {
     try {
@@ -21,7 +20,7 @@ export const sendEmail = async (req, res) => {
         }
 
         // Determina il template da usare in base alla lingua
-        const templateFile = language === 'it' ? `${server_url}/file/emailTemplate_it.html` : `${server_url}/file/emailTemplate_en.html`;
+        const templateFile = language === 'it' ? process.cwd() + '/file/emailTemplate_it.html' : process.cwd() + '/file/emailTemplate_en.html';
 
         // Legge il contenuto del file Html
         const htmlContent = await fs.readFile(templateFile, 'utf-8');
