@@ -5,19 +5,23 @@ import { Resend } from 'resend';
 import fs from 'fs/promises';
 import sanitizeHtml from 'sanitize-html';
 
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (req, res) => {
-    // Prende l'email dell'utente
-    const { email } = req.body;
+    // Prende l'email e la lingua dalla request body
+    const { email, language } = req.body;
+    console.log("Lingua server: " + language);
     // Verifica che l'email sia valida
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        // Legge il contenuto del file HTML di template
-        const htmlContent = await fs.readFile('./file/emailTemplate.html', 'utf-8');
+        // Determina il template da usare in base alla lingua
+        const templateFile = language === 'it' ? './file/emailTemplate_it.html' : './file/emailTemplate_en.html';
+        // Legge il contenuto del file Html
+        const htmlContent = await fs.readFile(templateFile, 'utf-8');
         // Pulisce il contenuto del file HTML di template
         const cleanHtml = sanitizeHtml(htmlContent, {
             allowedTags: sanitizeHtml.defaults.allowedTags, //Estende i tag permessi per includere il tag "style"
@@ -29,7 +33,7 @@ export const sendEmail = async (req, res) => {
         const { data, error } = await resend.emails.send({
             from: "Describify <info@describify.it>",
             to: email,
-            subject: "Benvenuto in Describify",
+            subject: language === 'it' ? "Benvenuto in Describify" : 'Welocome to Describify',
             html: cleanHtml,
         });
         // Verifica se ci siano errori di qualche tipo nella chiamata
