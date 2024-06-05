@@ -21,14 +21,11 @@
     },
     {
       "src": "/sitemap.xml",
-      "dest": "/sitemap.xml"
+      "dest": "/index.js"
     },
     {
       "src": "/(.*)",
       "dest": "/index.js"
     }
-  ],
-  "error": {
-    "404": "index.js"
-  }
+  ]
 }

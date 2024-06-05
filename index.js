@@ -65,7 +65,7 @@ app.use((err, req, res, next) => {
 
 // Gestione della rotta radice
 app.get('/', (req, res) => {
-  res.status(200).send('Welcome to Describify server');
+  res.status(200).send('Server is running');
 });
 
 // Numero di porta
