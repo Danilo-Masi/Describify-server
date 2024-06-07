@@ -1,5 +1,2 @@
 .env
 *node_modules/
-
-#File esclusi
-routes/chatRoutes.js
