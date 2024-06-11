@@ -1,4 +1,4 @@
-import supabase from './supabase.js';
+import supabase from '../config/supabase.js';
 import { validationResult } from 'express-validator';
 
 export const signupController = async (req, res) => {
@@ -16,7 +16,10 @@ export const signupController = async (req, res) => {
         //Funzione per la creazione di un nuovo utente
         let { data, error } = await supabase.auth.signUp({
             email: email,
-            password: password
+            password: password,
+            options: {
+                emailRedirectTo: 'https://www.describify.it'
+            }
         })
 
         // Verifica che l'utente sia presente

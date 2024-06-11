@@ -14,6 +14,10 @@ dotenv.config();
 import waitlistRoutes from './routes/waitlistRoutes.js';
 import resendRoutes from './routes/resendRoutes.js';
 
+//**************//
+//import signinRoutes from './routes/signinRoutes.js';
+//import signupRoutes from './routes/signupRoutes.js';
+
 const app = express();
 
 // Middlewares di sicurezza e prestazioni
@@ -42,6 +46,10 @@ app.use(express.json());
 // Routes
 app.use('/', waitlistRoutes);
 app.use('/', resendRoutes);
+
+//**********************//
+//app.use('/', signinRoutes);
+//app.use('/', signupRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {

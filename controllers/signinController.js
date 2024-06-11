@@ -1,7 +1,8 @@
-import supabase from './supabase.js';
+import supabase from '../config/supabase.js';
 import { validationResult } from 'express-validator';
 
 export const signinController = async (req, res) => {
+
     // Prende email e password dal client
     const { email, password } = req.body;
 
