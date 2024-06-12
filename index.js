@@ -1,4 +1,3 @@
-// Import express, cors, dotenv, helmet, morgan, rateLimit, compression
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -73,7 +72,7 @@ app.use((err, req, res, next) => {
 
 // Gestione della rotta radice
 app.get('/', (req, res) => {
-  res.status(200).send('Server is running');
+  res.status(200).send('Server is running...');
 });
 
 // Numero di porta
