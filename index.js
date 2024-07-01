@@ -12,10 +12,10 @@ dotenv.config();
 // Import routes
 import waitlistRoutes from './routes/waitlistRoutes.js';
 import resendRoutes from './routes/resendRoutes.js';
-
 //**************//
 //import signinRoutes from './routes/signinRoutes.js';
 //import signupRoutes from './routes/signupRoutes.js';
+//import signoutRoutes from './routes/signoutRoutes.js';
 
 const app = express();
 
@@ -45,10 +45,10 @@ app.use(express.json());
 // Routes
 app.use('/', waitlistRoutes);
 app.use('/', resendRoutes);
-
 //**********************//
 //app.use('/', signinRoutes);
 //app.use('/', signupRoutes);
+//app.use('/', signoutRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {
