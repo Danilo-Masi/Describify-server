@@ -6,7 +6,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 
-//Carica le variabili d'ambiente
+// Carica le variabili d'ambiente
 dotenv.config();
 
 // Import routes
@@ -16,6 +16,7 @@ import resendRoutes from './routes/resendRoutes.js';
 //import signinRoutes from './routes/signinRoutes.js';
 //import signupRoutes from './routes/signupRoutes.js';
 //import signoutRoutes from './routes/signoutRoutes.js';
+//import resetPasswordRoutes from './routes/resetPasswordRoutes.js';
 
 const app = express();
 
@@ -24,8 +25,7 @@ app.use(cors()); //Permette le richieste da origini diverse
 app.use(helmet()); //Aggiunge vari header di sicurezza HTTP
 app.use(compression()); //Comprime le risposte HTTP per migliorare le prestazioni
 
-// Rate limit
-// Limita ogni IP a 100 richieste per finestra di 15 minuti
+// Rate limit (Limita ogni IP a 100 richieste per finestra di 15 minuti)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -49,6 +49,7 @@ app.use('/', resendRoutes);
 //app.use('/', signinRoutes);
 //app.use('/', signupRoutes);
 //app.use('/', signoutRoutes);
+//app.use('/', resetPasswordRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {

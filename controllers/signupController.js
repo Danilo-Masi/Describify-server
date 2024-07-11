@@ -20,10 +20,7 @@ export const signupController = async (req, res) => {
         let { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
-            options: {
-                emailRedirectTo: 'https://www.describify.it'
-            }
-        })
+        });
 
         // Verifica che l'utente sia presente nel DB
         if (error) {
