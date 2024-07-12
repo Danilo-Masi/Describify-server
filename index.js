@@ -17,6 +17,7 @@ import resendRoutes from './routes/resendRoutes.js';
 //import signupRoutes from './routes/signupRoutes.js';
 //import signoutRoutes from './routes/signoutRoutes.js';
 //import resetPasswordRoutes from './routes/resetPasswordRoutes.js';
+//import updateUserRoutes from './routes/updateUserRoutes.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/', resendRoutes);
 //app.use('/', signupRoutes);
 //app.use('/', signoutRoutes);
 //app.use('/', resetPasswordRoutes);
+//app.use('/', updateUserRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {

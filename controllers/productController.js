@@ -1,19 +1,18 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import { validationResult } from 'express-validator';
 import openai from '../config/openai';
+
+dotenv.config();
 
 export const productGeneration = async (req, res) => {
     try {
         // Prende i valori del prodotto inseriti dall'utente
         const { prompt, plan } = req.body;
-
         // Verifica che i valori siano validi
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
         // Funzione per la generazione del contenuto
         const response = await openai.chat.completions.create({
             model: plan === "standard" ? "gpt-3.5-turbo" : "gpt-4",
@@ -25,10 +24,8 @@ export const productGeneration = async (req, res) => {
             temperature: 0.5,
             top_p: 1,
         });
-
         // Invio email riuscito
         res.json({ message: "Success", description: response.choices[0].message.content });
-
     } catch (error) {
         // Se si verifica un errore, stampa lo stack di errore completo
         console.error("API error:", error.stack);
