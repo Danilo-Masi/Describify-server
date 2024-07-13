@@ -1,21 +1,23 @@
 import supabase from '../config/supabase.js';
 
+// Messaggi predefiniti
+const SUPABASE_ERROR_MESSAGE = 'Errore nella fase di logout';
+const SUCCESS_MESSAGE = 'Logout effettuato correttamente';
+const SERVER_ERROR_MESSAGE = 'Errore del server';
+
 export const signoutController = async (req, res) => {
     try {
-        console.log('Funzione Logout: Server');
-
         // Funzione per effettuare il logout dall'account
         let { error } = await supabase.auth.signOut();
-
-        // Verifica errori durante la fase di logout
+        // Verifica che non ci siano eventuali errori specifici di Supabase
         if (error) {
-            return res.status(401).json({ error: 'Errore durante la fase di logout.' });
+            console.error('BACKEND: Errore da Supabase:', error.message);
+            return res.status(401).json({ error: SUPABASE_ERROR_MESSAGE, details: error.message });
         }
-
         // Invia una risposta di successo
-        res.status(200).json({ message: 'Logout effettuato con successo.' });
+        res.status(200).json({ message: SUCCESS_MESSAGE });
     } catch (error) {
-        console.error('Errore inatteso durante la fase di logout', error.message);
-        res.status(500).json({ error: 'Errore del server durante il logout.' });
+        console.error('BACKEND: Errore imprevisto durante il logout', error.message);
+        return res.status(500).json({ error: SERVER_ERROR_MESSAGE, details: error.message });
     }
 };

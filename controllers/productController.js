@@ -1,17 +1,23 @@
-import dotenv from 'dotenv';
-import { validationResult } from 'express-validator';
 import openai from '../config/openai';
+import dotenv from 'dotenv';
 
+// Caricamento delle variabili d'ambiente
 dotenv.config();
+
+// Messaggi predefiniti
+const VALIDATION_ERROR_MESSAGE = 'Errore di validazione';
+const OPEN_AI_ERROR_MESSAGE = 'Errore nella fase di generazione della caption';
+const SUCCESS_MESSAGE = 'Caption generata correttamente';
+const SERVER_ERROR_MESSAGE = 'Errore del server';
 
 export const productGeneration = async (req, res) => {
     try {
-        // Prende i valori del prodotto inseriti dall'utente
+        // Preleva i dati presenti nel body della richiesta
         const { prompt, plan } = req.body;
-        // Verifica che i valori siano validi
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+        // Verifica che i dati della richiesta non siano campi vuoti
+        if (!prompt || !plan) {
+            console.error('BACKEND: Prompt e/o plan mancante');
+            return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: 'Prompt e/o plan mancante' });
         }
         // Funzione per la generazione del contenuto
         const response = await openai.chat.completions.create({
@@ -24,11 +30,16 @@ export const productGeneration = async (req, res) => {
             temperature: 0.5,
             top_p: 1,
         });
-        // Invio email riuscito
-        res.json({ message: "Success", description: response.choices[0].message.content });
+        // Verifica che non ci siano eventuali errori specifici di OpenAI
+        if (!response.ok) {
+            console.error('BACKEND: Errore da OpenAI:', error.message);
+            return res.status(401).json({ error: OPEN_AI_ERROR_MESSAGE, details: error.message });
+        }
+        // Invia una risposta di successo
+        return res.json({ message: SUCCESS_MESSAGE, description: response.choices[0].message.content });
     } catch (error) {
-        // Se si verifica un errore, stampa lo stack di errore completo
-        console.error("API error:", error.stack);
-        return res.status(500).json({ message: "Internal Server Error", error: error.message });
+        // Errore impresto
+        console.error('BACKEND: Errore imprevisto durante la generazione della caption', error.message);
+        return res.status(500).json({ error: SERVER_ERROR_MESSAGE, details: error.message });
     }
 };

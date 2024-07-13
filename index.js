@@ -6,10 +6,10 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 
-// Carica le variabili d'ambiente
+// Caricamento delle variabili d'ambiente
 dotenv.config();
 
-// Import routes
+// Importazione delle routes
 import waitlistRoutes from './routes/waitlistRoutes.js';
 import resendRoutes from './routes/resendRoutes.js';
 //**************//
