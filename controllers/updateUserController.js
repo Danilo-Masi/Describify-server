@@ -1,5 +1,4 @@
 import supabase from '../config/supabase.js';
-import { validationResult } from 'express-validator';
 
 // Messaggi predefiniti
 const VALIDATION_ERROR_MESSAGE = 'Errore di validazione';
@@ -9,28 +8,30 @@ const SERVER_ERROR_MESSAGE = 'Errore del server';
 
 export const updateUserController = async (req, res) => {
     // Preleva i dati presenti nel body della richiesta
-    const { email, newPassword } = req.body;
+    const { newPassword, accessToken } = req.body;
     // Verifica che i dati della richiesta non siano campi vuoti
-    if (!email || !newPassword) {
+    if (!newPassword) {
         console.error('BACKEND: Email e/o nuova password mancante');
         return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: 'Email e nuova password non sono presenti' });
     }
-    // Verifica che l'email sia un'email valida
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        console.error('BACKEND: Errori di validazione:', errors.array());
-        return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: error.array() });
-    }
     try {
-        // Funzione per aggiornare i dati del profilo utente
-        const { data, error } = await supabase.auth.updateUser({ email, password: newPassword });
-        // Verifica che non ci siano eventuali errori specifici di Supabase
-        if (error) {
-            console.error('BACKEND: Errore da Supabase:', error.message);
-            return res.status(401).json({ error: SUPABASE_ERROR_MESSAGE, details: error.message });
-        }
-        // Invia una risposta di successo
-        return res.status(200).json({ message: SUCCESS_MESSAGE, data });
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event == "PASSWORD_RECOVERY") {
+                // Funzione per aggiornare i dati del profilo utente
+                const { data, error } = await supabase.auth.updateUser({
+                    password: newPassword
+                }, {
+                    accessToken: accessToken // Utilizza l'access token dalla sessione
+                });
+                // Verifica che non ci siano eventuali errori specifici di Supabase
+                if (error) {
+                    console.error('BACKEND: Errore da Supabase:', error.message);
+                    return res.status(401).json({ error: SUPABASE_ERROR_MESSAGE, details: error.message });
+                }
+                // Invia una risposta di successo
+                return res.status(200).json({ message: SUCCESS_MESSAGE, data });
+            }
+        });
     } catch (error) {
         // Invia una risposta di errore imprevisto
         console.error('BACKEND: Errore imprevisto durante aggiornamento profilo utente', error.message);
