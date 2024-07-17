@@ -24,7 +24,9 @@ export const resetPasswordController = async (req, res) => {
     }
     try {
         // Funzione per effettuare il reset della password dimenticata
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'http://127.0.0.1:5173/reset-password'
+        });
         // Verifica che non ci siano eventuali errori specifici di Supabase
         if (error) {
             console.error('BACKEND: Errore da Supabase:', error.message);
