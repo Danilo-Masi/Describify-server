@@ -42,11 +42,14 @@ export const signupToWaitlist = async (req, res) => {
         });
         // Verifica che non ci siano eventuali errori specifici di Waitlist
         if (!response.ok) {
-            console.error('BACKEND: Errore da Waitlist:', error.message);
-            return res.status(401).json({ error: WAITLIST_ERROR_MESSAGE, details: error.message });
+            const errorData = await response.json(); // Estrai il body di risposta in caso di errore
+            console.error('BACKEND: Errore da Waitlist:', errorData);
+            return res.status(401).json({ error: WAITLIST_ERROR_MESSAGE, details: errorData });
         }
+        // Estrai il body di successo dalla risposta
+        const responseData = await response.json();
         // Invia una risposta di successo
-        return res.status(200).json({ message: SUCCESS_MESSAGE, data });
+        return res.status(200).json({ message: SUCCESS_MESSAGE, data: responseData });
     } catch (error) {
         // Errore impresto
         console.error('BACKEND: Errore imprevisto durante la registrazione alla waitlist', error.message);
