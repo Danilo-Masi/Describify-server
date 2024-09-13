@@ -24,11 +24,11 @@ export const productGeneration = async (req, res) => {
             model: "gpt-4o-mini",
             messages: [{
                 role: "assistant",
-                content: `Descrivi brevemente e convincentemente un articolo di seconda mano per la vendita online con queste caratteristiche: ${prompt}. Metti in luce i vantaggi e lo stato dell'oggetto per attirare acquirenti su piattaforme come Vinted, Subito, eBay. Limite di parole: massimo 50.`
+                content: `Crea una descrizione efficace per vendere un articolo di seconda mano su piattaforme come Vinted, Subito, o eBay. Caratteristiche del prodotto: ${prompt}. Sottolinea i vantaggi chiave come il prezzo competitivo, le condizioni dell'articolo (indossato pochissime volte, come nuovo), e l'unicità. Aggiungi un tocco personale per creare fiducia con il potenziale acquirente. Limite massimo di parole: 150.`
             }],
             max_tokens: 200,
-            temperature: 0.5,
-            top_p: 1,
+            temperature: 0.6,
+            top_p: 0.9,
         });
         // Verifica che non ci siano eventuali errori specifici di OpenAI
         if (!response.choices || response.choices.length === 0) {
