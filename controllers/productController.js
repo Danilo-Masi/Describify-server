@@ -24,7 +24,13 @@ export const productGeneration = async (req, res) => {
             model: "gpt-4o-mini",
             messages: [{
                 role: "assistant",
-                content: `Crea una descrizione efficace per vendere un articolo di seconda mano su piattaforme come Vinted, Subito, o eBay. Caratteristiche del prodotto: ${prompt}. Sottolinea i vantaggi chiave come il prezzo competitivo, le condizioni dell'articolo (indossato pochissime volte, come nuovo), e l'unicità. Aggiungi un tocco personale per creare fiducia con il potenziale acquirente. Limite massimo di parole: 150.`
+                content: `Crea un titolo accattivante e una descrizione efficace per vendere un articolo di seconda mano su piattaforme come Vinted, Subito o eBay. Le caratteristiche del prodotto sono: ${prompt}. Il titolo deve essere breve (massimo 10 parole) e iniziare con un'emoji che rappresenti l'articolo. 
+                            La descrizione deve seguire questa struttura:
+                                1. Introduzione: Una breve frase che attiri l'attenzione, evidenziando il design e l'utilizzo dell'articolo.
+                                2. Caratteristiche principali: Includi una lista con emoji (ad esempio "🌟 Caratteristiche principali:") che elenca taglia, colore, materiale, condizioni e altre caratteristiche importanti.
+                                3. Motivi per acquistare: Spiega perché l'articolo è un ottimo affare, usando una sezione introdotta da un'emoji (ad esempio "🔹 Perché scegliere questo prodotto?"). Enfatizza il prezzo competitivo, le condizioni, e la qualità dell'articolo.
+                                4. Invito all'azione: Termina con un messaggio che inviti l'acquirente a contattarti per ulteriori dettagli o per provare il prodotto, ad esempio "📞 Contattami per maggiori dettagli o per organizzare una prova."
+                            Assicurati di mantenere il testo sotto le 150 parole, rendendo il tutto personale e coinvolgente. Come cosa importante ricoda di delineare il titolo con Titolo: e la descrizione con Descrizione: senza mettere **`
             }],
             max_tokens: 200,
             temperature: 0.6,
@@ -36,7 +42,12 @@ export const productGeneration = async (req, res) => {
             return res.status(500).json({ error: OPEN_AI_ERROR_MESSAGE, details: 'No valid response from OpenAI' });
         }
         // Invia una risposta di successo
-        return res.json({ message: SUCCESS_MESSAGE, description: response.choices[0].message.content });
+        const responseText = response.choices[0].message.content;
+        const titleStart = responseText.indexOf('Titolo: ') + 'Titolo: '.length;
+        const descriptionStart = responseText.indexOf('Descrizione: ');
+        const title = responseText.slice(titleStart, descriptionStart).trim();
+        const description = responseText.slice(descriptionStart + 'Descrizione: '.length).trim();
+        return res.json({ message: SUCCESS_MESSAGE, title, description });
     } catch (error) {
         // Errore impresto
         console.error('BACKEND: Errore imprevisto durante la generazione della caption', error.message);
