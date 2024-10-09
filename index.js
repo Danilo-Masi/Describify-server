@@ -16,8 +16,10 @@ import resendRoutes from './routes/resendRoutes.js';
 //import signinRoutes from './routes/signinRoutes.js';
 //import signupRoutes from './routes/signupRoutes.js';
 //import signoutRoutes from './routes/signoutRoutes.js';
-//import productRoutes from './routes/productRoutes.js';
 //import commentRoutes from './routes/commentRoutes.js';
+//import productRoutes from './routes/productRoutes.js';
+//import productImageRoutes from './routes/productImageRoutes.js';
+
 
 const app = express();
 
@@ -50,8 +52,9 @@ app.use('/', resendRoutes);
 //app.use('/', signinRoutes);
 //app.use('/', signupRoutes);
 //app.use('/', signoutRoutes);
-//app.use('/', productRoutes);
 //app.use('/', commentRoutes);
+//app.use('/', productRoutes);
+//app.use('/', productImageRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {
