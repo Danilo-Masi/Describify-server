@@ -20,7 +20,6 @@ import resendRoutes from './routes/resendRoutes.js';
 //import productRoutes from './routes/productRoutes.js';
 //import productImageRoutes from './routes/productImageRoutes.js';
 
-
 const app = express();
 
 // Middlewares di sicurezza e prestazioni

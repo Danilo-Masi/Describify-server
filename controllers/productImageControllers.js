@@ -1,33 +1,26 @@
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
 import dotenv from 'dotenv';
+import openai from '../config/openai.js';
 
 dotenv.config();
 
 // Messaggi di errore/successo
-const OPEN_AI_ERROR_MESSAGE = 'Errore durante l\'analisi dell\'immagine con OpenAI';
-const SERVER_ERROR_MESSAGE = 'Errore del server';
-const SUCCESS_MESSAGE = 'Analisi immagine completata con successo';
+const MESSAGES = {
+    OPEN_AI_ERROR: 'Errore durante l\'analisi dell\'immagine con OpenAI',
+    SERVER_ERROR: 'Errore del server',
+    SUCCESS: 'Analisi immagine completata con successo',
+};
 
 export const analyzeImage = async (req, res) => {
     try {
-        // Verifica se l'immagine è stata caricata
-        if (!req.file || !req.file.path) {
+        // Controlla se il file è presente nella richiesta
+        if (!req.file) {
             return res.status(400).json({ error: 'Immagine mancante nella richiesta' });
         }
 
-        // Legge il file e lo codifica in Base64
-        const imagePath = req.file.path;
-        const imageBase64 = fs.readFileSync(imagePath, 'base64');
+        // Converte il buffer dell'immagine in Base64
+        const base64Image = req.file.buffer.toString('base64');
 
-        // Impostazioni dell'header per la richiesta a OpenAI
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-        };
-
-        // Creazione del payload per OpenAI API
+        // Prepara il payload per l'API di OpenAI
         const payload = {
             model: "gpt-4o-mini",
             messages: [
@@ -36,12 +29,12 @@ export const analyzeImage = async (req, res) => {
                     content: [
                         {
                             type: "text",
-                            text: "Quali sono il marchio, la categoria, il colore e la taglia di questo oggetto?"
+                            text: "Analizza l'immagine e forniscimi le seguenti informazioni: categoria, colore e marchio. Rispondi solo nel formato specificato: 'categoria: <categoria>', 'colore: <colore>', 'marchio: <marchio>'."
                         },
                         {
                             type: "image_url",
                             image_url: {
-                                url: `data:image/jpeg;base64,${imageBase64}`
+                                url: `data:image/jpeg;base64,${base64Image}`
                             }
                         }
                     ]
@@ -50,21 +43,23 @@ export const analyzeImage = async (req, res) => {
             max_tokens: 300
         };
 
-        // Invio della richiesta all'API di OpenAI
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', payload, { headers });
+        // Esegui la richiesta all'API di OpenAI
+        const response = await openai.chat.completions.create(payload);
 
-        // Rimozione del file temporaneo
-        fs.unlinkSync(imagePath);
-
-        // Controlla se OpenAI ha fornito una risposta valida
-        if (response.data && response.data.choices && response.data.choices.length > 0) {
-            const analysisResult = response.data.choices[0].message.content;
-            return res.status(200).json({ message: SUCCESS_MESSAGE, result: analysisResult });
-        } else {
-            return res.status(500).json({ error: OPEN_AI_ERROR_MESSAGE, details: 'Risposta non valida da OpenAI' });
+        // Verifica se la risposta è valida
+        if (!response.choices?.length) {
+            console.error('BACKEND: Nessuna risposta valida da OpenAI');
+            return res.status(500).json({ error: MESSAGES.OPEN_AI_ERROR });
         }
+
+        // Estrai il testo di risposta
+        const responseText = response.choices[0].message.content;
+
+        // Invio della risposta al client
+        return res.json({ message: MESSAGES.SUCCESS, responseText });
+
     } catch (error) {
         console.error('SERVER: Errore durante l\'analisi dell\'immagine', error.message);
-        return res.status(500).json({ error: SERVER_ERROR_MESSAGE, details: error.message });
+        return res.status(500).json({ error: MESSAGES.SERVER_ERROR, details: error.message });
     }
 };
