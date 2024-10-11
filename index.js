@@ -19,6 +19,7 @@ import resendRoutes from './routes/resendRoutes.js';
 //import commentRoutes from './routes/commentRoutes.js';
 //import productRoutes from './routes/productRoutes.js';
 //import productImageRoutes from './routes/productImageRoutes.js';
+//import emailSendRoutes from './routes/emailSendRoutes.js';
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use('/', resendRoutes);
 //app.use('/', commentRoutes);
 //app.use('/', productRoutes);
 //app.use('/', productImageRoutes);
+//app.use('/', emailSendRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {
