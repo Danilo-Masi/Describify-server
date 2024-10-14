@@ -1,9 +1,14 @@
 import express from 'express';
-// Controller
-import { verifyToken } from '../controllers/verifyTokenController.js';
+import { verificaToken } from '../controllers/verifyTokenController.js';
 
 const router = express.Router();
 
-router.get('/verify-token', verifyToken);
+// Rotta per verificare il token
+router.get('/verify-token', (req, res, next) => {
+    console.log("Endpoint /verify-token chiamato");
+    next();
+}, verificaToken, (req, res) => {
+    res.status(200).json({ message: 'Token valido', user: req.user });
+});
 
 export default router;

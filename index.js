@@ -17,10 +17,10 @@ import resendRoutes from './routes/resendRoutes.js';
 //import signupRoutes from './routes/signupRoutes.js';
 //import signoutRoutes from './routes/signoutRoutes.js';
 //import verifyTokenRoutes from './routes/verifyTokenRoutes.js';
-//import commentRoutes from './routes/commentRoutes.js';
+//import emailSendRoutes from './routes/emailSendRoutes.js';
 //import productRoutes from './routes/productRoutes.js';
 //import productImageRoutes from './routes/productImageRoutes.js';
-//import emailSendRoutes from './routes/emailSendRoutes.js';
+//import commentRoutes from './routes/commentRoutes.js';
 
 const app = express();
 
@@ -54,10 +54,10 @@ app.use('/', resendRoutes);
 //app.use('/', signupRoutes);
 //app.use('/', signoutRoutes);
 //app.use('/', verifyTokenRoutes);
-//app.use('/', commentRoutes);
+//app.use('/', emailSendRoutes);
 //app.use('/', productRoutes);
 //app.use('/', productImageRoutes);
-//app.use('/', emailSendRoutes);
+//app.use('/', commentRoutes);
 
 // Endpoint di salute
 app.get('/healt', (req, res) => {
@@ -81,7 +81,7 @@ app.use((err, req, res, next) => {
 
 // Gestione della rotta radice
 app.get('/', (req, res) => {
-  res.status(200).send('Server is running...');
+  res.status(200).send(`Server is running at port: ${port}`);
 });
 
 // Numero di porta
