@@ -18,9 +18,8 @@ export const verificaToken = (req, res, next) => {
 
     try {
         const decoded = jwt.decode(token);
-        console.log("Token decodificato:", decoded);
     } catch (err) {
-        console.error("Errore nella decodifica del token:", err);
+        console.error("Errore nella decodifica del token:", err.message);
     }
 
     try {

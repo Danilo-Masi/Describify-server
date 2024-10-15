@@ -27,6 +27,7 @@
     "nodemon": "^3.1.0",
     "openai": "^4.60.0",
     "resend": "^3.2.0",
-    "sanitize-html": "^2.13.0"
+    "sanitize-html": "^2.13.0",
+    "winston": "^3.15.0"
   }
 }
