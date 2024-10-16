@@ -37,7 +37,7 @@ export const signinController = async (req, res) => {
             console.error('BACKEND: Errore da Supabase:', error.message);
             return res.status(401).json({ error: SUPABASE_ERROR_MESSAGE, details: error.message });
         }
-        //Genera il token JWT
+        // Genera il token JWT
         const token = jwt.sign(
             { id: data.user.id, email: data.user.email }, //Payload del token
             process.env.JWT_SECRET, //Chiave segreta per firmare il token
