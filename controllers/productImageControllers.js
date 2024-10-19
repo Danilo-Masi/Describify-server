@@ -29,7 +29,7 @@ export const analyzeImage = async (req, res) => {
                     content: [
                         {
                             type: "text",
-                            text: "Analizza l'immagine e forniscimi le seguenti informazioni: categoria, colore e marchio. Rispondi solo nel formato specificato: 'categoria: <categoria>', 'colore: <colore>', 'marchio: <marchio>'."
+                            text: "Analizza l'immagine e forniscimi le seguenti informazioni: categoria, colore e marchio. Rispondi solo nel formato specificato: 'categoria: <categoria>', 'colore: <colore>', 'marchio: <marchio>'. Non aggiungere virgole o segni."
                         },
                         {
                             type: "image_url",
