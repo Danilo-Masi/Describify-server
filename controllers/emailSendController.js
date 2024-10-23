@@ -15,19 +15,19 @@ const SERVER_ERROR_MESSAGE = 'Errore del server';
 
 export const sendEmail = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { emailReciver, emailSubject, email } = req.body;
 
         // Controllo dei dati di input
-        if (!email) {
-            console.error('BACKEND: Il campo email è mancante');
-            return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: 'Il campo email è mancante' });
+        if (!email || emailReciver === "" || emailSubject === "") {
+            console.error('BACKEND: Il campo emailReciver/subject/email è mancante');
+            return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: 'Il campo emailReciver/subject/email è mancante' });
         }
 
         // Invio dell'email tramite Resend
         const { data, error } = await resend.emails.send({
             from: "Describify <info@describify.it>",
-            to: "info@describify.it",
-            subject: 'Notifica di HELP',
+            to: emailReciver,
+            subject: emailSubject,
             html: email,
         });
 

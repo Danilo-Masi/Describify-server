@@ -27,20 +27,37 @@ export const signupController = async (req, res) => {
         return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: error.message });
     }
     try {
-        // Funzione per effettuare la registrazione
-        const { data, error } = await supabase.auth.signUp({
+        // 1. Effettua il signup con Supabase Auth
+        const { data, error: authError } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: { name }
             }
         });
-        // Verifica che non ci siano eventuali errori specifici di Supabase
-        if (error) {
-            console.error('BACKEND: Errore da Supabase:', error.message);
-            return res.status(401).json({ error: SUPABASE_ERROR_MESSAGE, details: error.message });
+        // Verifica che non ci siano eventuali errori specifici di Supabase Auth
+        if (authError) {
+            console.error('BACKEND: Errore da Supabase:', authError.message);
+            return res.status(401).json({ error: SUPABASE_ERROR_MESSAGE, details: authError.message });
         }
-        // Genera il token JWT
+        // 2. Inserisce il nuovo utente nella tabella 'users'
+        const { user } = data;
+        const { error: dbError } = await supabase
+            .from('users')
+            .insert([
+                {
+                    id: user.id,
+                    email: user.email,
+                    name: user.app_metadata.name,
+                    numero_crediti: 0
+                }
+            ]);
+        // Verifica che non ci siano eventuali errori specifici di Supabase DB
+        if (dbError) {
+            console.error('BACKEND: Errore durante l\'inserimento nella tabella users:', dbError.message);
+            return res.status(500).json({ error: 'Database insertion error', details: dbError.message });
+        }
+        // 3. Genera il token JWT
         const token = jwt.sign(
             { id: data.user.id, email: data.user.email },
             process.env.JWT_SECRET,
