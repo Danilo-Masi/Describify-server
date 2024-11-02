@@ -13,7 +13,7 @@
     },
     {
       "src": "/api/resend",
-      "dest": "/routes/resendRoutes.js"
+      "dest": "/routes/remailSendRoutes.js"
     },
     {
       "src": "/health",
