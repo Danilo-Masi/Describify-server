@@ -1,65 +1,29 @@
 import openai from '../config/openai.js';
 import dotenv from 'dotenv';
-import supabase from '../config/supabase.js';
-import jwt from 'jsonwebtoken';
 
 // Caricamento delle variabili d'ambiente
 dotenv.config();
 
-// Messaggi predefiniti
-const VALIDATION_ERROR_MESSAGE = 'Errore di validazione';
-const OPEN_AI_ERROR_MESSAGE = 'Errore nella fase di generazione della caption';
-const CREDITS_ERROR_MESSAGE = 'Crediti insufficienti';
-const SUCCESS_MESSAGE = 'Caption generata correttamente';
-const SERVER_ERROR_MESSAGE = 'Errore del server';
+// Messaggi di errore/successo
+const MESSAGES = {
+    VALIDATION_ERROR_MESSAGE: 'Errore di validazione',
+    OPEN_AI_ERROR_MESSAGE: 'Errore nella fase di generazione della caption',
+    SERVER_ERROR_MESSAGE: 'Errore del server',
+    SUCCESS_MESSAGE: 'Caption generata correttamente',
+};
 
 export const productGeneration = async (req, res) => {
     try {
-        // Estrai il token JWT dall'header di autorizzazione
-        const token = req.headers.authorization?.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ error: 'Token mancante o non valido' });
-        }
-
-        console.log('TOKEN: ', token); //LOG
-
-        // Decodifica il token per ottenere l'userId
-        const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decodeToken.id;
-
-        console.log('USER ID: ', userId); //LOG
-
         // Preleva i dati presenti nel body della richiesta
         const { prompt } = req.body;
 
-        // Verifica che i dati della richiesta non siano campi vuoti
+        // Verifica che i dati della richiesta siano validi
         if (!prompt) {
-            console.error('BACKEND: Prompt e/o plan mancante');
-            return res.status(400).json({ error: VALIDATION_ERROR_MESSAGE, details: 'Prompt mancante' });
+            console.error('BACKEND: Prompt mancante');
+            return res.status(400).json({ error: MESSAGES.VALIDATION_ERROR_MESSAGE });
         }
 
-        // Preleva il numero di token dalla tabella users nel DB di supabase
-        const { data, error: userError } = await supabase
-            .from('users')
-            .select('numero_crediti')
-            .eq('id', userId);
-
-        if (userError) {
-            console.error('Errore nel recupero dei dati:', userError);
-        } else if (data.length > 0) {
-            console.log('ID prelevato', data[0].id); // Accesso al primo oggetto nell'array
-            console.log('Token prelevati', data[0].numero_crediti); // Accesso al numero di crediti
-        } else {
-            console.log('Nessun utente trovato con questo ID.');
-        }
-
-        // Controlla se l'utente ha abbastanza crediti
-        if (data.numero_crediti <= 0) {
-            console.error('BACKEND: Crediti insufficienti', userError.message);
-            return res.status(403).json({ error: CREDITS_ERROR_MESSAGE, details: 'Crediti insufficienti' });
-        }
-
-        // Funzione per la generazione del contenuto
+        // Genera il contenuto tramite l'API di OPENAI
         const response = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [{
@@ -80,32 +44,22 @@ export const productGeneration = async (req, res) => {
         // Verifica che non ci siano eventuali errori specifici di OpenAI
         if (!response.choices || response.choices.length === 0) {
             console.error('BACKEND: Nessuna risposta da OpenAI');
-            return res.status(500).json({ error: OPEN_AI_ERROR_MESSAGE, details: 'No valid response from OpenAI' });
+            return res.status(500).json({ error: MESSAGES.OPEN_AI_ERROR_MESSAGE });
         }
-        // Estrarre titolo e descrizione dalla risposta
+
+        // Estre titolo e descrizione dalla risposta
         const responseText = response.choices[0].message.content;
         const titleStart = responseText.indexOf('Titolo: ') + 'Titolo: '.length;
         const descriptionStart = responseText.indexOf('Descrizione: ');
         const title = responseText.slice(titleStart, descriptionStart).trim();
         const description = responseText.slice(descriptionStart + 'Descrizione: '.length).trim();
 
-        // Diminuisci di 1 il numero di crediti dell'utente
-        const { error: updateError } = await supabase
-            .from('users')
-            .update({ numero_crediti: user.numero_crediti - 1 })
-            .eq('id', userId);
-
-        // Verifica eventuali errori nell'aggiornamento dei crediti
-        if (updateError) {
-            console.error('BACKEND: Errore nel diminuire i crediti', updateError.message);
-            return res.status(500).json({ error: SERVER_ERROR_MESSAGE, details: 'Errore nel diminuire i crediti' });
-        }
-
         // Invia una risposta di successo con titolo e descrizione
-        return res.json({ message: SUCCESS_MESSAGE, title, description });
+        return res.json({ message: MESSAGES.SUCCESS_MESSAGE, title, description });
+        
     } catch (error) {
         // Gestione degli errori
         console.error('BACKEND: Errore imprevisto durante la generazione della caption', error.message);
-        return res.status(500).json({ error: SERVER_ERROR_MESSAGE, details: error.message });
+        return res.status(500).json({ error: MESSAGES.SERVER_ERROR_MESSAGE });
     }
 };

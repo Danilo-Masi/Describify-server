@@ -1,5 +1,5 @@
 import express from 'express';
-//controllers
+// Importa il controller per il signup
 import { signoutController } from '../controllers/signoutController.js';
 
 const router = express.Router();

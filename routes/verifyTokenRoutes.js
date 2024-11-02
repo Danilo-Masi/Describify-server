@@ -1,4 +1,5 @@
 import express from 'express';
+// Importa il controller per verificare il token di accesso dell'utente
 import { verificaToken } from '../controllers/verifyTokenController.js';
 
 const router = express.Router();

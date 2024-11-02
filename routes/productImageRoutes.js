@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-// Importa il controller per l'analisi delle immagini
+// Importa il controller per l'analisi delle immagini tramite OPENAI
 import { analyzeImage } from '../controllers/productImageControllers.js';
 
 const router = express.Router();

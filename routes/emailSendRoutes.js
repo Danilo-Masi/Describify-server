@@ -1,9 +1,9 @@
 import express from 'express';
-//controllers
+// Importa il controller per inviare email tramite Resend
 import { sendEmail } from '../controllers/emailSendController.js';
 
 const router = express.Router();
 
-router.post('/send-template', sendEmail);
+router.post('/send-email', sendEmail);
 
 export default router;

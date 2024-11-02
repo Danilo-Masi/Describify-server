@@ -1,5 +1,5 @@
 import express from 'express';
-//controllers
+// Importa il controller per l'iscrizione alla waitlist
 import { signupToWaitlist } from '../controllers/waitlistController.js';
 
 const router = express.Router();

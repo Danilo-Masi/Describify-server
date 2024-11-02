@@ -1,5 +1,5 @@
 import express from 'express';
-//controllers
+// Importa il controller per il signin
 import { signinController } from '../controllers/signinController.js';
 
 const router = express.Router();
