@@ -6,6 +6,9 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 
 export const applyMiddlewares = (app) => {
+    // Abilita la fiducia nel proxy per Vercel
+    app.set('trust proxy', 1);
+
     app.use(cors());
     app.use(helmet());
     app.use(compression());
